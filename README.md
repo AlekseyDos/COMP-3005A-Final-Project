@@ -2,7 +2,7 @@
 
 Name: Aleksey Dosov
 
-Youtube Link:
+Youtube Link: https://youtu.be/G0Xws4ERORY
 
 # Table Creation Instructions: #
 Create a new database inside postgres using pgAdmin4
