@@ -104,7 +104,7 @@ WHERE event_id = 1;
 --Update an equipment's condition
 UPDATE Equipment
 SET condition = 'Good'
-WHERE equipment_id = 1000003;
+WHERE equipment_id = 0000003;
 
 --Update the booked room for an event
 UPDATE Booked
