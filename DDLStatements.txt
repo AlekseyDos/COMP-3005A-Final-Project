@@ -1,0 +1,132 @@
+CREATE TABLE Members (
+	member_id NUMERIC(7,0) PRIMARY KEY,
+	fname VARCHAR(255) NOT NULL,
+	lname VARCHAR(255) NOT NULL,
+	dob VARCHAR(255) NOT NULL,
+	email VARCHAR(255) UNIQUE NOT NULL,
+	password VARCHAR(255) NOT NULL,
+	payment_method NUMERIC(16,0) NOT NULL,
+	height VARCHAR(255),
+	weight VARCHAR(255),
+	medical_conditions TEXT,
+	total_points INT,
+	exercise_routines TEXT,
+	fitness_achievements TEXT,
+	health_statistics TEXT,
+	fitness_goals TEXT
+);
+
+CREATE TABLE Events (
+	event_id NUMERIC(7,0) PRIMARY KEY,
+	description TEXT,
+	num_spots INT,
+	date_and_time DATE DEFAULT DATE(CURRENT_TIMESTAMP)
+);
+
+CREATE TABLE Trainers (
+	trainer_id NUMERIC(7,0) PRIMARY KEY,
+	fname VARCHAR(255) NOT NULL,
+	lname VARCHAR(255) NOT NULL,
+	email VARCHAR(255) UNIQUE NOT NULL,
+	password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Admins (
+	admin_id NUMERIC(7,0) PRIMARY KEY,
+	fname VARCHAR(255) NOT NULL,
+	lname VARCHAR(255) NOT NULL,
+	email VARCHAR(255) UNIQUE NOT NULL,
+	admin_password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE TrainingRooms (
+	trainingroom_id NUMERIC(7,0) PRIMARY KEY,
+	size TEXT,
+	privacy_status TEXT
+);
+
+CREATE TABLE Equipment (
+	trainingroom_id NUMERIC(7,0),
+	equipment_id NUMERIC(7,0),
+	description TEXT,
+	name TEXT,
+	condition TEXT,
+	PRIMARY KEY(trainingroom_id, equipment_id),
+	FOREIGN KEY (trainingroom_id)
+		REFERENCES TrainingRooms (trainingroom_id)
+);
+
+CREATE TABLE Attending (
+	member_id NUMERIC(7,0),
+	event_id NUMERIC(7,0),
+	PRIMARY KEY(member_id, event_id),
+	FOREIGN KEY (member_id)
+		REFERENCES Members (member_id),
+	FOREIGN KEY (event_id)
+		REFERENCES Events (event_id)
+);
+
+CREATE TABLE Leads (
+	trainer_id NUMERIC(7,0),
+	event_id NUMERIC(7,0),
+	PRIMARY KEY(trainer_id, event_id),
+	FOREIGN KEY (trainer_id)
+		REFERENCES Trainers (trainer_id),
+	FOREIGN KEY (event_id)
+		REFERENCES Events (event_id)
+);
+
+CREATE TABLE Booked (
+	trainingroom_id NUMERIC(7,0),
+	event_id NUMERIC(7,0),
+	PRIMARY KEY(trainingroom_id, event_id),
+	FOREIGN KEY (trainingroom_id)
+		REFERENCES TrainingRooms (trainingroom_id),
+	FOREIGN KEY (event_id)
+		REFERENCES Events (event_id)
+);
+
+CREATE TABLE PersonalTraining (
+	member_id NUMERIC(7,0),
+	trainer_id NUMERIC(7,0),
+	trainingroom_id NUMERIC(7,0),
+	PRIMARY KEY(member_id, trainer_id, trainingroom_id),
+	FOREIGN KEY (member_id)
+		REFERENCES Members (member_id),
+	FOREIGN KEY (trainer_id)
+		REFERENCES Trainers (trainer_id),
+	FOREIGN KEY (trainingroom_id)
+		REFERENCES TrainingRooms (trainingroom_id)
+);
+
+CREATE TABLE PersonalTrainingNotes (
+	member_id NUMERIC(7,0),
+	trainer_id NUMERIC(7,0),
+	progress_notes TEXT,
+	PRIMARY KEY(member_id, trainer_id),
+	FOREIGN KEY (member_id)
+		REFERENCES Members (member_id),
+	FOREIGN KEY (trainer_id)
+		REFERENCES Trainers (trainer_id)
+);
+
+CREATE TABLE AdminPhoneNumbers (
+	admin_id NUMERIC(7,0) PRIMARY KEY,
+	phone_numbers NUMERIC(10,0),
+	FOREIGN KEY (admin_id)
+		REFERENCES Admins (admin_id)
+);
+
+CREATE TABLE MemberPhoneNumbers (
+	member_id NUMERIC(7,0) PRIMARY KEY,
+	phone_numbers NUMERIC(10,0),
+	FOREIGN KEY (member_id)
+		REFERENCES Members (member_id)
+);
+
+CREATE TABLE TrainerPhoneNumbers (
+	trainer_id NUMERIC(7,0) PRIMARY KEY,
+	phone_numbers NUMERIC(10,0),
+	FOREIGN KEY (trainer_id)
+		REFERENCES Trainers (trainer_id)
+);

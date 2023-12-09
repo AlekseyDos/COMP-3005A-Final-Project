@@ -1,0 +1,112 @@
+--Inserts sample data
+INSERT INTO Members (member_id, fname, lname, dob, email, password, payment_method, height, weight, medical_conditions, total_points) 
+VALUES (1234567, 'John', 'Smith', '2000-01-03', 'johnsmith@gmail.com', 'password', 1234567890123456, '170 cm', '88 kg', 'None', 200),
+(1112223, 'Jim', 'Snow', '2000-02-14', 'jimsnow@gmail.com', 'password', 1234567890123456, '170 cm', '88 kg', 'None', 220);
+
+INSERT INTO MemberPhoneNumbers
+VALUES (1234567, 1234567890),
+(1112223, 0987654321);
+
+INSERT INTO Trainers (trainer_id, fname, lname, email, password)
+VALUES (1231231, 'Bill', 'Stone', 'billstone@gmail.com', 'password');
+
+INSERT INTO TrainerPhoneNumbers
+VALUES (1231231, 0987654321);
+
+INSERT INTO Events (event_id, description, num_spots)
+VALUES (0000001, 'Meet and Greet', 50),
+(0000002, 'Yoga', 20);
+
+INSERT INTO TrainingRooms (trainingroom_id, size, privacy_status)
+VALUES (0000001, 60, 'public'),
+(0000002, 10, 'private');
+
+INSERT INTO Equipment (trainingroom_id, equipment_id, description, name, condition)
+VALUES (0000001, 0000001, 'Single Handed Weights', 'Dumbbells', 'Good'),
+(0000001, 0000002, 'Bar with adjustable weights', 'Bench Bar', 'Good'),
+(0000001, 0000003, 'Ez Bar', 'Ez Bar', 'Poor');
+
+--A trainer chooses to lead an event
+INSERT INTO Leads
+VALUES (1231231, 0000001);
+
+--A member chooses to attend an event
+INSERT INTO Attending
+VALUES (1234567, 0000001);
+
+INSERT INTO Attending
+VALUES (1112223, 0000002);
+
+--A training room is booked for an event
+INSERT INTO Booked
+VALUES (0000001, 0000001);
+
+--A member joins a trainer for personal training at a booked room
+INSERT INTO PersonalTraining
+VALUES (1234567, 1231231, 0000002),
+(1112223, 1231231, 0000002);
+
+--The trainer leaves a note for the personal training
+INSERT INTO PersonalTrainingNotes
+VALUES (1234567, 1231231, 'Notes and Suggestions from the trainer to this member');
+
+--Lists all the members that are attending event "1"
+SELECT member_id, fname, lname, event_id, description
+FROM Members NATURAL INNER JOIN (
+	SELECT *
+	FROM Attending NATURAL INNER JOIN Events
+)
+WHERE event_id = 1;
+
+--Lists all the members in descending order by points
+SELECT member_id, fname, lname, total_points
+FROM Members
+ORDER BY total_points DESC;
+
+--Lists all training rooms with equipment and the equipment used in them
+SELECT *
+FROM Equipment;
+
+--Lists all training rooms without any equipment
+SELECT trainingroom_id
+FROM Trainingrooms
+EXCEPT
+SELECT trainingroom_id
+FROM Equipment;
+
+--List the phone numbers of all the members that trainer Bill has personal training with
+SELECT tname, trainer_id, mname, phone_numbers
+FROM (
+	SELECT fname || ' ' || lname AS mname, member_id, phone_numbers
+	FROM Members NATURAL INNER JOIN MemberPhoneNumbers
+)
+NATURAL INNER JOIN (
+	SELECT fname || ' ' || lname AS tname, trainer_id, member_id
+	FROM Trainers NATURAL INNER JOIN Personaltraining
+	WHERE fname = 'Bill' AND lname = 'Stone'
+);
+
+--Update a member's email
+UPDATE Members
+SET email = 'johnsmith@custom.com'
+WHERE member_id = 1234567;
+
+--Update a member's phone number
+UPDATE MemberPhoneNumbers
+SET phone_numbers = 1112223333
+WHERE member_id = 1234567;
+
+--Update an event's date and time
+UPDATE Events
+SET date_and_time = '2024-01-10'
+WHERE event_id = 1;
+
+--Update an equipment's condition
+UPDATE Equipment
+SET condition = 'Good'
+WHERE equipment_id = 1000003;
+
+--Update the booked room for an event
+UPDATE Booked
+SET trainingroom_id = 2
+WHERE event_id = 1;
