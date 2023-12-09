@@ -98,7 +98,7 @@ WHERE member_id = 1234567;
 
 --Update an event's date and time
 UPDATE Events
-SET date_and_time = '2024-01-10'
+SET date = '2024-01-10'
 WHERE event_id = 1;
 
 --Update an equipment's condition

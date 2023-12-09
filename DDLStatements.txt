@@ -20,7 +20,8 @@ CREATE TABLE Events (
 	event_id NUMERIC(7,0) PRIMARY KEY,
 	description TEXT,
 	num_spots INT,
-	date_and_time DATE DEFAULT DATE(CURRENT_TIMESTAMP)
+	date DATE DEFAULT DATE(CURRENT_TIMESTAMP),
+	time TEXT DEFAULT '00:00'
 );
 
 CREATE TABLE Trainers (
@@ -90,6 +91,8 @@ CREATE TABLE PersonalTraining (
 	member_id NUMERIC(7,0),
 	trainer_id NUMERIC(7,0),
 	trainingroom_id NUMERIC(7,0),
+	date DATE DEFAULT DATE(CURRENT_TIMESTAMP),
+	time TEXT DEFAULT '00:00',
 	PRIMARY KEY(member_id, trainer_id, trainingroom_id),
 	FOREIGN KEY (member_id)
 		REFERENCES Members (member_id),
